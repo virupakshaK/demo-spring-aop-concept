@@ -1,0 +1,3 @@
+[submodule "example-submodule-updated"]
+	path = example-submodule-updated
+	url = git@github.com:ppremk/example-submodule-updated.git
