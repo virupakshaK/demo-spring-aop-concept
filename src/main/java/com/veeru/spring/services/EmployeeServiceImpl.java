@@ -9,8 +9,10 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.veeru.spring.customAnnotation.CustomAnnotation;
 import com.veeru.spring.dao.EmployeeRepository;
 import com.veeru.spring.dto.EmployeeDTO;
+import com.veeru.spring.exceptionhandlers.ObjectNotFoundException;
 import com.veeru.spring.mapper.EmployeeMapper;
 import com.veeru.spring.models.Employee;
 
@@ -36,8 +38,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeDTO getEmpInfoById(Integer Id) {
-		Optional<Employee> emp = empRepo.findById(Id);
-		return mapper.toEmployeeDTO(emp.get());
+	public EmployeeDTO getEmpInfoById(Integer Id) throws ObjectNotFoundException {
+		Optional<Employee> empOption = empRepo.findById(Id);
+		Employee emp = empOption.orElseThrow(ObjectNotFoundException::new);
+		return mapper.toEmployeeDTO(emp);
+	}
+
+	@Override
+	@CustomAnnotation
+	public void deleteEmployeeById(Integer id) throws ObjectNotFoundException {
+		empRepo.deleteById(id);
 	}
 }
